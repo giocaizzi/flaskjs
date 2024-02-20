@@ -1,18 +1,19 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # ----------------------------------
 # Start the flask app in dev (debug) mode
 # Args:
-#   -h: hostname. Default: localhost
-#   -p: port. Default: 3000
-#   -d: debug. Default: true
+#   -d: server directory (not used, but kept for consistency with next.sh)
+#   -h: hostname
+#   -p: port
 # ----------------------------------
 
 # parse command-line arguments
 # getopts for short options
-while getopts "h:p:" opt; do
+while getopts "h:p:d:" opt; do
   case $opt in
     h) host=$OPTARG ;;
     p) port=$OPTARG ;;
+    d) ;; # not used
     \?) echo "Invalid option -$OPTARG" >&2; exit 1 ;;
   esac
 done

@@ -1,23 +1,20 @@
-#!/bin/bash
-
+#!/usr/bin/env bash
 # ----------------------------------
-# Start the react app in dev mode
+# Start the next app in dev mode
 # Args:
-#   --public: Run the server on the network
-# 
-# Uses the .env file for:
-#   PORT_CLIENT: The port to run the client on
+#   -d: client directory
+#   -h: hostname
+#   -p: port
 # ----------------------------------
 
-# Load the .env file
-source .env
-
-# Check if the --public parameter is provided
-if [[ $1 == "--public" ]]; then
-    HOST="0.0.0.0" # Public on the network
-else
-    HOST="127.0.0.1" # Localhost
-fi
-
-cd client
-npm run dev -- -p $PORT_CLIENT -H $HOST
+# parse command-line arguments
+# getopts for short options
+while getopts "h:p:d:" opt; do
+  case $opt in
+    h) host=$OPTARG ;;
+    p) port=$OPTARG ;;
+    d) cdir=$OPTARG ;;
+    \?) echo "Invalid option -$OPTARG" >&2; exit 1 ;;
+  esac
+done
+npm --prefix "./$cdir" run dev -- -p $port -H $host 
