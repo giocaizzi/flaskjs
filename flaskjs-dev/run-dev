@@ -14,6 +14,9 @@
 #   --only-client: Run only the client
 #
 # Uses the .env file for:
+#   FLASK_APP: The flask app
+#   RUN_DEV_SDIR: The server directory
+#   RUN_DEV_CDIR: The client directory
 #   PORT_SERVER: The port to run the server on
 #   PORT_CLIENT: The port to run the client on
 # ----------------------------------------------
@@ -31,8 +34,8 @@ fi
 # Initialize variables
 quit=false
 host="127.0.0.1" # localhost
-sdir="server"
-cdir="client"
+sdir="${RUN_DEV_SDIR:-"server"}"
+cdir="${RUN_DEV_CDIR:-"client"}"
 run_server=true
 run_client=true
 
@@ -96,9 +99,9 @@ check_directory $run_client "$cdir"
 # Clean the ports
 # everytime!
 for port in $PORT_CLIENT $PORT_SERVER; do
-    echo "Cleaning port $port..."
-    # clean all processes on the port
-    lsof -i tcp:$port | awk 'NR!=1 {print $2}' | xargs kill 
+  echo "Cleaning port $port..."
+  # clean all processes on the port
+  lsof -i tcp:$port | awk 'NR!=1 {print $2}' | xargs kill 
 done
 
 
@@ -117,26 +120,30 @@ services["server"]="flask.sh"
 services["client"]="next.sh"
 
 start_service() {
-    local service=$1
-    local run_service=$2
-    local port=$3
-    local host=$4
-    local prefix=$5
+  local service=$1
+  local run_service=$2
+  local port=$3
+  local host=$4
+  local prefix=$5
 
-    if [ $run_service == true ]; then
-        echo "Starting $service..."
-        # if there is a screen named $service already running quit
-        if screen -list | grep -q "$service"; then
-            echo "  > $service is already running!"
-            echo "  > Restarting $service..."
-            screen -XS $service quit
-        fi
-        screen -dmS $service "$root/${services[$service]}" -h $host -p $port -d $prefix
-        echo "$service started on port $port!"
+  if [ $run_service == true ]; then
+    echo "Starting $service..."
+    # if there is a screen named $service already running quit
+    if screen -list | grep -q "$service"; then
+        echo "  > $service is already running!"
+        echo "  > Restarting $service..."
+        screen -XS $service quit
     fi
-
-
+    screen -dmS $service "$root/${services[$service]}" -h $host -p $port -d $prefix
+    echo "$service started on port $port!"
+  else 
+    echo "Skipping $service"
+  fi
 }
 
-start_service "server" $run_server $PORT_SERVER $host
+# Start the server
+# "fake" is a dummy argument, for some reason it's needed
+# empty string does not work
+start_service "server" $run_server $PORT_SERVER $host "fake"
+# Start the client
 start_service "client" $run_client $PORT_CLIENT $host $cdir
