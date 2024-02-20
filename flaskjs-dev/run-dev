@@ -15,6 +15,7 @@
 #
 # Uses the .env file for:
 #   PORT_SERVER: The port to run the server on
+#   PORT_CLIENT: The port to run the client on
 # ----------------------------------------------
 
 # root dir
