@@ -74,20 +74,20 @@ if [ "$only_server" == true ] && [ "$only_client" == true ]; then
     exit 1
 fi
 
+check_directory() {
+    local run_object=$1
+    local dir=$2
+
+    if [ $run_object == true ]; then
+        if [ ! -d "$dir" ]; then
+            echo "Error - Directory not found: $dir"
+            exit 1
+        fi
+    fi
+}
 # check existance of the server and client directories
-# considering --only-server and --only-client
-if [ $run_server == true ]; then
-    if [ ! -d "$root/$sdir" ]; then
-        echo "Error - Server directory not found: $root/$sdir"
-        exit 1
-    fi
-fi
-if [ $run_client == true ]; then
-    if [ ! -d "$root/$cdir" ]; then
-        echo "Error - Client directory not found: $root/$cdir"
-        exit 1
-    fi
-fi
+check_directory $run_server "$sdir"
+check_directory $run_client "$cdir"
 
 
 # Clean the ports
