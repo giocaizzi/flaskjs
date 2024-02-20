@@ -1,0 +1,123 @@
+#!/bin/bash
+# @giocaizzi (©2024)
+# ----------------------------------------------
+# Run flask and nextjs app in dev mode
+#
+# Args:
+#   --quit: Quit the server and client
+#   --public: Run on the network
+#   --sdir: The server directory. Default: server
+#   --cdir: The client directory. Default: client
+#   --only-server: Run only the server
+#   --only-client: Run only the client
+#
+# Uses the .env file for:
+#   PORT_SERVER: The port to run the server on
+# ----------------------------------------------
+
+# root dir
+root=$(dirname "$0")
+
+# Source the .env file
+source .env
+
+
+# Initialize variables
+quit=false
+host="127.0.0.1" # localhost
+sdir="server"
+cdir="client"
+run_server=true
+run_client=true
+
+# Parse command-line arguments
+# while case shift for long line (--arg value)
+while (( "$#" )); do
+  case "$1" in
+    --quit)
+      quit=true
+      shift
+      ;;
+    --public)
+      host="0.0.0.0" # public on the network
+      shift
+      ;;
+    --sdir)
+      sdir="$2"
+      shift 2
+      ;;
+    --cdir)
+      cdir="$2"
+      shift 2
+      ;;
+    --only-server)
+      run_client=false
+      shift
+      ;;
+    --only-client)
+      run_server=false
+      shift
+      ;;
+    *)
+      echo "Error - Invalid argument : $1"
+      exit 1
+      ;;
+  esac
+done
+
+# only server and only client can't be true at the same time
+if [ "$only_server" == true ] && [ "$only_client" == true ]; then
+    echo "Error - only-server and only-client can't be true at the same time"
+    exit 1
+fi
+
+
+# Clean the ports
+# everytime!
+for port in $PORT_CLIENT $PORT_SERVER; do
+    echo "Cleaning port $port..."
+    # clean all processes on the port
+    lsof -i tcp:$port | awk 'NR!=1 {print $2}' | xargs kill 
+done
+
+
+# if quitting stop here as we cleaned the ports
+if [ "$quit" == true ]; then
+    echo "Quitting client and server..."
+    exit 0
+fi
+
+
+# SERVER
+if [ $run_client == false]; then
+    echo "Starting only the serer..."
+fi
+if [ $run_server == true ]; then
+    # Start the server
+    echo "Starting server..."
+    # if there is a screen named 'server' already running, do nothing
+    # else create a new screen named 'server'
+    if screen -list | grep -q "server"; then
+        echo "  > Server is already running!"
+        echo "  > Restarting server..."
+        screen -XS server quit
+    fi
+    screen -dmS server "$root/$sdir/flask.sh" $host $PORT_SERVER
+    echo "Server started on port $PORT_SERVER!"
+fi
+
+# # client
+# if [ $run_server == false]; then
+#     echo "Starting only the client..."
+# fi
+# if [ $run_client == true ]; then
+#     # Start the client
+#     echo "Starting client..."
+#     if screen -list | grep -q "client"; then
+#         echo "  > Client is already running!"
+#         echo "  > Restarting client..."
+#         screen -XS client quit
+#     fi
+#     screen -dmS client "$root/$cdir/next.sh" $host $PORT_CLIENT
+#     echo "Client started on port $PORT_CLIENT!"
+# fi
