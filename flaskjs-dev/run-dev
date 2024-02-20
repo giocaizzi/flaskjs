@@ -18,9 +18,12 @@
 # root dir
 root=$(dirname "$0")
 
-# Source the .env file
-source .env
-
+# if .env file exists, source it
+if [ -f .env ]; then
+    source .env
+else
+    echo ".env file not found! Using defaults."
+fi
 
 # Initialize variables
 quit=false
@@ -71,6 +74,21 @@ if [ "$only_server" == true ] && [ "$only_client" == true ]; then
     exit 1
 fi
 
+# check existance of the server and client directories
+# considering --only-server and --only-client
+if [ $run_server == true ]; then
+    if [ ! -d "$root/$sdir" ]; then
+        echo "Error - Server directory not found: $root/$sdir"
+        exit 1
+    fi
+fi
+if [ $run_client == true ]; then
+    if [ ! -d "$root/$cdir" ]; then
+        echo "Error - Client directory not found: $root/$cdir"
+        exit 1
+    fi
+fi
+
 
 # Clean the ports
 # everytime!
@@ -89,7 +107,7 @@ fi
 
 
 # SERVER
-if [ $run_client == false]; then
+if [ $run_client == false ]; then
     echo "Starting only the serer..."
 fi
 if [ $run_server == true ]; then
