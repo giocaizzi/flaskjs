@@ -27,17 +27,17 @@ Args:
 Assuming that folder paths meet the default, or `RUN-DEV_SDIR` and  `RUN-DEV_CDIR` [envaironmental variables](#environment-variables) are set, to run the app in dev mode:
 
 ```shell
-run-dev
+flaskjs-dev
 ```
 
 To quit:
 ```shell
-run-dev quit
+flaskjs-dev --quit
 ```
 
 To run only server:
 ```shell
-run-dev --only-server
+flaskjs-dev --only-server
 ```
 
 ## Environment variables
@@ -49,5 +49,5 @@ The `.env ` variables used are:
 - `FLASK_APP`
 - `PORT_CLIENT` (Optional)
 - `PORT_SERVER` (Optional)
-- `RUN-DEV_SDIR` (Optional): sets `--sdir`
-- `RUN-DEV_CDIR` (Optional): sets `--cdir`
+- `RUN_DEV_SDIR` (Optional): sets `--sdir`
+- `RUN_DEV_CDIR` (Optional): sets `--cdir`
