@@ -1,14 +1,14 @@
-# flaskjs-dev
+# flaskjs
 
 This is a **bash** project to run [Flask]() and a JavaScript client framework (eg. [Next.js]()) in two separate screens concurrently and be able to control their settings for developement purposes.
 
 > **Note**
 >
 > Remember to **make scripts executable**!
-> `chmod +x /path/to/flaskjs-dev/*`
+> `chmod +x /path/to/flaskjs/*`
 >
 > And to **add the `PATH` variable** to `~/.bashrc`, `~/.zshrc`, etc.
-> `export PATH="/path/to/flaskjs-dev:$PATH"`
+> `export PATH="/path/to/flaskjs:$PATH"`
 
 ## Basics
 
@@ -27,17 +27,17 @@ Args:
 Assuming that folder paths meet the default, or `RUN-DEV_SDIR` and  `RUN-DEV_CDIR` [envaironmental variables](#environment-variables) are set, to run the app in dev mode:
 
 ```shell
-flaskjs-dev
+flaskjs
 ```
 
 To quit:
 ```shell
-flaskjs-dev --quit
+flaskjs --quit
 ```
 
 To run only server:
 ```shell
-flaskjs-dev --only-server
+flaskjs --only-server
 ```
 
 ## Environment variables
@@ -49,5 +49,5 @@ The `.env ` variables used are:
 - `FLASK_APP`
 - `PORT_CLIENT` (Optional)
 - `PORT_SERVER` (Optional)
-- `RUN_DEV_SDIR` (Optional): sets `--sdir`
-- `RUN_DEV_CDIR` (Optional): sets `--cdir`
+- `FLASKJS_SDIR` (Optional): sets `--sdir`
+- `FLASKJS_CDIR` (Optional): sets `--cdir`

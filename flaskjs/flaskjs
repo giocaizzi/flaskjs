@@ -15,8 +15,8 @@
 #
 # Uses the .env file for:
 #   FLASK_APP: The flask app
-#   RUN_DEV_SDIR: The server directory
-#   RUN_DEV_CDIR: The client directory
+#   FLASKJS_SDIR: The server directory
+#   FLASKJS_CDIR: The client directory
 #   PORT_SERVER: The port to run the server on
 #   PORT_CLIENT: The port to run the client on
 # ----------------------------------------------
@@ -34,8 +34,8 @@ fi
 # Initialize variables
 quit=false
 host="127.0.0.1" # localhost
-sdir="${RUN_DEV_SDIR:-"server"}"
-cdir="${RUN_DEV_CDIR:-"client"}"
+sdir="${FLASKJS_SDIR:-"server"}"
+cdir="${FLASKJS_CDIR:-"client"}"
 run_server=true
 run_client=true
 
