@@ -19,4 +19,4 @@ while getopts "h:p:d:" opt; do
 done
 
 # Run flask with the port from the .env file
-flask run --debugger --host=$host --port=$port
+flask --app="$FLASKJS_SDIR.$FLASK_APP" run --debug --host=$host --port=$port
